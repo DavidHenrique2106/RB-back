@@ -1,28 +1,21 @@
 import os
 import uvicorn
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from supabase import create_client, Client
-from dotenv import load_dotenv
+from fastapi import FastAPI
+from app.api import router
+from app.core.config import settings
 
-load_dotenv()
+app = FastAPI(
+    title="Swagger com FastAPI",
+    description="Documentação automática com Swagger",
+    version="1.0.0"
+)
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-app = FastAPI()
-
-class Usuario(BaseModel):
-    nome: str
-    email: str
+app.include_router(router)
 
 @app.get("/")
 async def home():
     return {"message": "API rodando na Render 🚀"}
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 10000)) 
-    print(f"Iniciando servidor na porta {port}...")  
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    print(f"Iniciando servidor na porta {settings.PORT}...")
+    uvicorn.run(app, host="0.0.0.0", port=settings.PORT)
