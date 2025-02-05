@@ -1,9 +1,11 @@
+import os
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from supabase import create_client, Client
 from dotenv import load_dotenv
-import os
 
+# Carregar variáveis de ambiente
 load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -12,6 +14,7 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 if not SUPABASE_URL or not SUPABASE_KEY:
     raise ValueError("As variáveis SUPABASE_URL e SUPABASE_KEY não estão configuradas corretamente.")
 
+# Criar cliente Supabase
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 app = FastAPI()
@@ -49,5 +52,5 @@ async def deletar_usuario(usuario_id: int):
     return {"message": "Usuário excluído com sucesso"}
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)  
+    port = int(os.getenv("PORT", 8000))  
+    uvicorn.run(app, host="0.0.0.0", port=port)
