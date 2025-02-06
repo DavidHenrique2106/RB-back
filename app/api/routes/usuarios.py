@@ -8,11 +8,12 @@ router = APIRouter(prefix="/usuarios", tags=["Usuários"])
 async def listar_usuarios():
     return UsuarioService.listar_usuarios()
 
-@router.post("/")
+@router.post("/cadastrar")
 async def criar_usuario(usuario: UsuarioSchema):
     return UsuarioService.criar_usuario(usuario)
+    return {"mensagem:" f"olá, {nome}"}
 
-@router.put("/{usuario_id}", response_model=UsuarioSchema)
+@router.put("/atualizar/{usuario_id}", response_model=UsuarioSchema)
 async def atualizar_usuario(usuario_id: int, usuario: UsuarioSchema):
     usuario_atualizado = UsuarioService.atualizar_usuario(usuario_id, usuario)
     
@@ -21,7 +22,7 @@ async def atualizar_usuario(usuario_id: int, usuario: UsuarioSchema):
     
     return usuario_atualizado
 
-@router.delete("/{usuario_id}", status_code=204)
+@router.delete("/deletar/{usuario_id}", status_code=204)
 async def excluir_usuario(usuario_id: int):
     sucesso = UsuarioService.excluir_usuario(usuario_id)
     
