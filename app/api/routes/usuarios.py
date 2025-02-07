@@ -11,7 +11,7 @@ async def listar_usuarios():
 @router.post("/cadastrar")
 async def criar_usuario(usuario: UsuarioSchema):
     return UsuarioService.criar_usuario(usuario)
-    return {"mensagem:" f"olá, {nome}"}
+    return {"mensagem": f"olá, {nome}"}
 
 @router.put("/atualizar/{usuario_id}", response_model=UsuarioSchema)
 async def atualizar_usuario(usuario_id: int, usuario: UsuarioSchema):
