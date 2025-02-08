@@ -4,3 +4,4 @@ asyncpg
 SQLAlchemy
 supabase
 python-dotenv
+pydantic

@@ -1,6 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from uuid import UUID
 
 class UsuarioSchema(BaseModel):
+    id: UUID | None = None 
     nome: str
-    email: str
-    idade: int
+    email: EmailStr
+    senha: str
