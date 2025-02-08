@@ -5,3 +5,4 @@ SQLAlchemy
 supabase
 python-dotenv
 pydantic
+pydantic[email]
