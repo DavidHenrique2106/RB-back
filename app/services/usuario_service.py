@@ -1,34 +1,34 @@
 from app.schemas.usuario import UsuarioSchema
+from app.core.database import supabase
+from uuid import UUID
 
 class UsuarioService:
-    def __init__(self):
-        self.usuarios = [
-            {"id": 1, "nome": "João", "email": "joao@example.com", "idade": 25},
-            {"id": 2, "nome": "Maria", "email": "maria@example.com", "idade": 30},
-        ]
-    
-    def listar_usuarios(self):
-        return self.usuarios
+    @staticmethod
+    def listar_usuarios():
+        response = supabase.table("usuarios").select("*").execute()
+        return response.data if response.data else []
 
-    def criar_usuario(self, usuario: UsuarioSchema):
-        novo_usuario = {"id": len(self.usuarios) + 1, "nome": usuario.nome, "email": usuario.email, "idade": usuario.idade}
-        self.usuarios.append(novo_usuario)
-        return novo_usuario
-    
-    def atualizar_usuario(self, usuario_id: int, usuario: UsuarioSchema):
-        usuario_encontrado = next((u for u in self.usuarios if u["id"] == usuario_id), None)
-        
-        if usuario_encontrado:
-            usuario_encontrado["nome"] = usuario.nome
-            usuario_encontrado["email"] = usuario.email
-            usuario_encontrado["idade"] = usuario.idade
-            return usuario_encontrado
-        return None
-    
-    def excluir_usuario(self, usuario_id: int):
-        usuario_encontrado = next((u for u in self.usuarios if u["id"] == usuario_id), None)
-        
-        if usuario_encontrado:
-            self.usuarios.remove(usuario_encontrado)
-            return True
-        return False
+    @staticmethod
+    def criar_usuario(usuario: UsuarioSchema):
+        response = supabase.table("usuarios").insert({
+            "nome": usuario.nome,
+            "email": usuario.email,
+            "senha": usuario.senha
+        }).execute()
+        if response.data:
+            return response.data[0]  
+        return {"mensagem": "Erro ao criar usuário"}
+
+    @staticmethod
+    def atualizar_usuario(usuario_id: UUID, usuario: UsuarioSchema):
+        response = supabase.table("usuarios").update({
+            "nome": usuario.nome,
+            "email": usuario.email,
+            "senha": usuario.senha
+        }).eq("id", usuario_id).execute()
+        return response.data if response.data else {"mensagem": "Usuário não encontrado"}
+
+    @staticmethod
+    def excluir_usuario(usuario_id: UUID):
+        response = supabase.table("usuarios").delete().eq("id", usuario_id).execute()
+        return response.status_code == 204
