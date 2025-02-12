@@ -18,6 +18,7 @@ async def login(usuario: LoginSchema):
 
 @router.post("/cadastrar")
 async def criar_usuario(usuario: UsuarioSchema):
+    print("Recebendo dados no backend:", usuario)  
     usuario_criado = UsuarioService.criar_usuario(usuario)
     if isinstance(usuario_criado, dict) and "mensagem" in usuario_criado:
         raise HTTPException(status_code=400, detail=usuario_criado["mensagem"])
