@@ -7,8 +7,7 @@ class Settings:
     SUPABASE_URL = os.getenv("SUPABASE_URL")
     SUPABASE_KEY = os.getenv("SUPABASE_KEY")
     PORT = int(os.getenv("PORT", 10000))
-    
-    ENV = os.getenv("ENV", "dev")  
+    ENV = os.getenv("ENV", "dev")
     
     if ENV == "prod":
         FRONTEND_URL = os.getenv("FRONTEND_URL_PROD")
