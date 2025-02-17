@@ -4,6 +4,7 @@ from app.schemas.usuario import UsuarioSchema, LoginSchema
 from app.core.auth import verificar_token
 from uuid import UUID  
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordRequestForm
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="usuarios/login")
 
@@ -19,11 +20,11 @@ async def listar_usuarios(token: str = Depends(oauth2_scheme)):
     return usuarios
     
 @router.post("/login")
-async def login(usuario: LoginSchema):
-    usuario_logado = UsuarioService.autenticar_usuario(usuario.email, usuario.senha)
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    usuario_logado = UsuarioService.autenticar_usuario(form_data.username, form_data.password)
     if not usuario_logado:
         raise HTTPException(status_code=401, detail="Credenciais inválidas")
-    return {"message": "Login bem-sucedido", "user": usuario_logado["usuario"], "token": usuario_logado["token"]}
+    return {"access_token": usuario_logado["token"], "token_type": "bearer"}
 
 @router.post("/cadastrar")
 async def criar_usuario(usuario: UsuarioSchema):
